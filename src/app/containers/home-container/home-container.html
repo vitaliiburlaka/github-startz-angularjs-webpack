@@ -1,0 +1,12 @@
+<div class="home-container">
+  <languages-list
+    languages="$ctrl.languages"
+    selected-language="$ctrl.selectedLanguage"
+    on-select="$ctrl.onSelect(lang)">
+  </languages-list>
+
+  <repos-list
+    repos="$ctrl.repos"
+    ng-if="$ctrl.repos">
+  </repos-list>
+</div>

@@ -1,0 +1,20 @@
+<ul class='repos-list'>
+  <li class='repos-list__item'
+    ng-repeat="repo in $ctrl.repos track by $index">
+
+    <figure class="repo-item">
+      <h4 class='repo-item__number'>#{{$index +1}}</h4>
+
+      <a class="repo-item__image" href="{{repo.html_url}}" rollover>
+        <img ng-src="{{repo.owner.avatar_url}}" alt="Avatar for {{repo.owner.name}}"/>
+      </a>
+
+      <ul class='repo-item__details'>
+        <li><a class="repo-item__link" href="{{repo.html_url}}">{{repo.name}}</a></li>
+        <li>@{{repo.owner.login}}</li>
+        <li>⭐ {{repo.stargazers_count}}</li>
+      </ul>
+    </figure>
+
+  </li>
+</ul>

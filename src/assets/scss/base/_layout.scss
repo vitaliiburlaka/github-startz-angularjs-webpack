@@ -1,0 +1,42 @@
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all .15s;
+}
+
+
+.main-header {
+  background: $shark-dark;
+  padding: $content-padding-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+
+.banner {
+  color: $alto-grey;
+  font-style: italic;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  text-align: center;
+  transform: rotate(-10deg);
+
+  &__title {
+    font-weight: 700;
+    display: block;
+  }
+
+  &__caption {
+    font-size: 22px;
+    display: block;
+  }
+}
+
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $content-padding-base;
+}

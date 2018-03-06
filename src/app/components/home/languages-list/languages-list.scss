@@ -1,0 +1,23 @@
+@import 'base/variables';
+
+.languages-list {
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+
+  @media screen and (max-width: 767px) {
+    justify-content: initial;
+  }
+
+  &__item {
+    padding: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color .15s ease;
+
+    &:hover,
+    &--selected {
+      color: $cerulean;
+    }
+  }
+}

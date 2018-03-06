@@ -1,0 +1,44 @@
+@import 'base/variables';
+
+.app-loader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: $shark-dark;
+  box-shadow: 0 2px 3px rgba(#000, .2);
+  transition: all .15s;
+  z-index: 100;
+
+  .loadding-bar {
+    width: 0;
+    height: 3px;
+    background: $cerulean;
+  }
+}
+
+// Slide aimation
+.animate-slide {
+  &.ng-enter {
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: all .15s;
+
+    &.ng-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &.ng-leave {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all .15s;
+
+    &.ng-leave-active {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+}

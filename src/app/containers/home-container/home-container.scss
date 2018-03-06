@@ -1,0 +1,5 @@
+@import 'utils/mixins';
+
+.home-container {
+  @include clearfix;
+}
