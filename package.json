@@ -15,7 +15,6 @@
     "deploy": "cross-env NODE_ENV=production npm run build",
     "analyze": "npm run clean&& cross-env NODE_ENV=production webpack -p --progress --env.analyze"
   },
-
   "license": "MIT",
   "dependencies": {
     "angular": "^1.6.9",
@@ -25,6 +24,7 @@
   },
   "devDependencies": {
     "angular-mocks": "^1.6.9",
+    "autoprefixer": "^8.6.3",
     "cross-env": "^5.1.3",
     "css-loader": "^0.28.9",
     "eslint": "^4.17.0",

@@ -29,7 +29,7 @@ module.exports = function() {
       },
     },
     resolve: {
-      modules: [appSrc, path.resolve(__dirname, 'node_modules')],
+      modules: [path.resolve(__dirname, 'node_modules'), appSrc],
       extensions: ['.js', '.json', '.css', '.scss', '.html'],
       alias: {
         // Alias to the assets folder for easy "import"
@@ -39,18 +39,14 @@ module.exports = function() {
     module: {
       strictExportPresence: true,
       rules: [
-        // Disable require.ensure as it's not a standard language feature.
-        { parser: { requireEnsure: false } },
-
         {
           test: /src.*\.js$/,
+          include: appSrc,
           use: [
-            // This loader parallelizes code compilation
-            require.resolve('thread-loader'),
             // Add AngularJS DI annotations
             require.resolve('ng-annotate-loader'),
           ],
-          exclude: [/[/\\\\]node_modules[/\\\\]/],
+          // exclude: [/[/\\\\]node_modules[/\\\\]/],
         },
         {
           test: /\.css$/,
@@ -71,6 +67,7 @@ module.exports = function() {
               loader: require.resolve('postcss-loader'),
               options: {
                 sourceMap: true,
+                importLoaders: 1,
               },
             },
             {

@@ -29,7 +29,7 @@ module.exports = function(env) {
       publicPath: publicPath,
     },
     resolve: {
-      modules: [appSrc, path.resolve(__dirname, 'node_modules')],
+      modules: [path.resolve(__dirname, 'node_modules'), appSrc],
       extensions: ['.js', '.css', '.json', '.scss', '.html'],
       alias: {
         // Alias to the assets folder for easy "import"
@@ -39,18 +39,14 @@ module.exports = function(env) {
     module: {
       strictExportPresence: true,
       rules: [
-        // Disable require.ensure as it's not a standard language feature.
-        { parser: { requireEnsure: false } },
-
         {
           test: /src.*\.js$/,
+          include: appSrc,
           use: [
-            // This loader parallelizes code compilation
-            require.resolve('thread-loader'),
             // Add AngularJS DI annotations
             require.resolve('ng-annotate-loader'),
           ],
-          exclude: [/[/\\\\]node_modules[/\\\\]/],
+          // exclude: [/[/\\\\]node_modules[/\\\\]/],
         },
         {
           test: /\.css$/,
@@ -75,6 +71,7 @@ module.exports = function(env) {
                 loader: require.resolve('postcss-loader'),
                 options: {
                   sourceMap: true,
+                  importLoaders: 1,
                 },
               },
               {
@@ -161,11 +158,6 @@ module.exports = function(env) {
           comments: false,
           ascii_only: true,
         },
-        // Use multi-process parallel running to improve the build speed
-        // Default number of concurrent runs: os.cpus().length - 1
-        parallel: true,
-        // Enable file caching
-        cache: true,
         sourceMap: shouldUseSourceMap,
       }),
       new ExtractTextPlugin({
