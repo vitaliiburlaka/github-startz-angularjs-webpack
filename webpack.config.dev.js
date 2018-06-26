@@ -134,6 +134,7 @@ module.exports = function() {
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
       }),
+      new webpack.HotModuleReplacementPlugin(),
     ],
     devServer: {
       compress: true,
