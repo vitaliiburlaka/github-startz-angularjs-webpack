@@ -18,8 +18,8 @@ function rolloverDirective() {
         var yCoor = halfH - (event.pageY - this.offsetTop);
 
         // Calculate max rotation degree
-        var xDeg = yCoor / halfH * tiltLimit + 'deg';
-        var yDeg = xCoor / halfW * -tiltLimit + 'deg'; // Should be negative value
+        var xDeg = (yCoor / halfH) * tiltLimit + 'deg';
+        var yDeg = (xCoor / halfW) * -tiltLimit + 'deg'; // Should be negative value
 
         var transformGen = function() {
           return (

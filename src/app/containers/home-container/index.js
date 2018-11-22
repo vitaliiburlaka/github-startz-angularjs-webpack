@@ -1,5 +1,5 @@
 var angular = require('angular');
-var uiRouter = require('angular-ui-router');
+var uiRouter = require('@uirouter/angularjs').default;
 
 var homeRoute = require('./home.route');
 var homeContainer = require('./home-container.component');

@@ -1,6 +1,6 @@
 var angular = require('angular');
 var ngAnimate = require('angular-animate');
-var uiRouter = require('angular-ui-router');
+var uiRouter = require('@uirouter/angularjs').default;
 
 require('normalize.css');
 
