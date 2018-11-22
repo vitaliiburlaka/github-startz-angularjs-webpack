@@ -2,7 +2,10 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var TerserPlugin = require('terser-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+var safePostCssParser = require('postcss-safe-parser');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
@@ -11,13 +14,61 @@ var publicPath = '/';
 var buildPath = path.resolve(__dirname, 'dist');
 var appSrc = path.resolve(__dirname, './src');
 var shouldUseSourceMap = process.env.NODE_ENV !== 'production';
+var isEnvProduction = process.env.NODE_ENV === 'production';
+
+// Style files regexes
+var cssRegex = /\.css$/;
+var sassRegex = /\.(scss|sass)$/;
+
+// Common function to get style loaders
+var getStyleLoaders = function(cssOptions, preProcessor) {
+  var loaders = [
+    {
+      loader: MiniCssExtractPlugin.loader,
+    },
+    {
+      loader: require.resolve('css-loader'),
+      options: cssOptions,
+    },
+    {
+      loader: require.resolve('postcss-loader'),
+      options: {
+        // Necessary for external CSS imports to work
+        // https://github.com/facebook/create-react-app/issues/2677
+        ident: 'postcss',
+        plugins: function() {
+          return [
+            require('postcss-flexbugs-fixes'),
+            require('postcss-preset-env')({
+              autoprefixer: {
+                flexbox: 'no-2009',
+              },
+              stage: 3,
+            }),
+          ];
+        },
+        sourceMap: shouldUseSourceMap,
+      },
+    },
+  ];
+  if (preProcessor) {
+    loaders.push({
+      loader: require.resolve(preProcessor),
+      options: {
+        sourceMap: shouldUseSourceMap,
+      },
+    });
+  }
+  return loaders;
+};
 
 // Defining config as a `function` allow us to pass the `env` argument
 // which gives us access to the command-line params
 module.exports = function(env) {
   var config = {
-    // Stops attempts to continue if there are any errors.
-    bail: true,
+    mode: 'production',
+    // Stop compilation early in production
+    bail: isEnvProduction,
     devtool: shouldUseSourceMap ? 'source-map' : false,
     entry: {
       app: './src/index.js',
@@ -27,6 +78,57 @@ module.exports = function(env) {
       filename: 'static/js/[name].[chunkhash:8].js',
       chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
       publicPath: publicPath,
+    },
+    optimization: {
+      minimize: isEnvProduction,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              ecma: 5,
+              warnings: false,
+              // https://github.com/mishoo/UglifyJS2/issues/2011
+              comparisons: false,
+              // https://github.com/terser-js/terser/issues/120
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            output: {
+              ecma: 5,
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              ascii_only: true,
+            },
+          },
+          // Use multi-process parallel running to improve the build speed
+          // Default number of concurrent runs: os.cpus().length - 1
+          parallel: true,
+          // Enable file caching
+          cache: true,
+          sourceMap: shouldUseSourceMap,
+        }),
+        // This is only used in production mode
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorOptions: {
+            parser: safePostCssParser,
+            map: shouldUseSourceMap
+              ? {
+                  // `inline: false` forces the sourcemap to be output into a
+                  // separate file
+                  inline: false,
+                  // `annotation: true` appends the sourceMappingURL to the end of
+                  // the css file, helping the browser find the sourcemap
+                  annotation: true,
+                }
+              : false,
+          },
+        }),
+      ],
+      splitChunks: {
+        chunks: 'all',
+      },
     },
     resolve: {
       modules: [path.resolve(__dirname, 'node_modules'), appSrc],
@@ -39,6 +141,8 @@ module.exports = function(env) {
     module: {
       strictExportPresence: true,
       rules: [
+        // Disable require.ensure as it's not a standard language feature.
+        { parser: { requireEnsure: false } },
         {
           test: /src.*\.js$/,
           include: appSrc,
@@ -46,46 +150,29 @@ module.exports = function(env) {
             // Add AngularJS DI annotations
             require.resolve('ng-annotate-loader'),
           ],
-          // exclude: [/[/\\\\]node_modules[/\\\\]/],
         },
         {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract({
-            fallback: require.resolve('style-loader'),
-            use: require.resolve('css-loader'),
+          test: cssRegex,
+          loader: getStyleLoaders({
+            importLoaders: 1,
+            sourceMap: shouldUseSourceMap,
           }),
+          // Remove this when webpack adds a warning or an error for this.
+          // See https://github.com/webpack/webpack/issues/6571
+          sideEffects: true,
         },
         {
-          test: /\.scss$/,
-          loader: ExtractTextPlugin.extract({
-            fallback: require.resolve('style-loader'),
-            use: [
-              {
-                loader: require.resolve('css-loader'),
-                options: {
-                  sourceMap: true,
-                  importLoaders: 2,
-                },
-              },
-              {
-                loader: require.resolve('postcss-loader'),
-                options: {
-                  sourceMap: true,
-                  importLoaders: 1,
-                },
-              },
-              {
-                loader: require.resolve('sass-loader'),
-                options: {
-                  outputStyle: 'expanded',
-                  sourceMap: true,
-                  sourceMapContents: true,
-                  // Allow easy "@import" some core styles like variables from anywhere in the app
-                  includePaths: [path.resolve(__dirname, './src/assets/scss')],
-                },
-              },
-            ],
-          }),
+          test: sassRegex,
+          loader: getStyleLoaders(
+            {
+              importLoaders: 2,
+              sourceMap: shouldUseSourceMap,
+            },
+            'sass-loader'
+          ),
+          // Remove this when webpack adds a warning or an error for this.
+          // See https://github.com/webpack/webpack/issues/6571
+          sideEffects: true,
         },
         {
           test: /\.(jpg|png|gif|svg)$/i,
@@ -94,7 +181,7 @@ module.exports = function(env) {
               loader: require.resolve('url-loader'),
               options: {
                 limit: 10000,
-                name: 'static/images/[name].[hash:8].[ext]',
+                name: 'static/media/[name].[hash:8].[ext]',
               },
             },
           ],
@@ -103,10 +190,9 @@ module.exports = function(env) {
           test: /\.(otf|ttf|woff|woff2)$/,
           use: [
             {
-              loader: require.resolve('url-loader'),
+              loader: require.resolve('file-loader'),
               options: {
-                limit: 10000,
-                name: 'static/fonts/[name].[hash:8].[ext]',
+                name: 'static/media/[name].[hash:8].[ext]',
               },
             },
           ],
@@ -145,36 +231,15 @@ module.exports = function(env) {
           minifyURLs: true,
         },
       }),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          comparisons: false,
-          screw_ie8: true,
-        },
-        mangle: {
-          safari10: true,
-        },
-        output: {
-          comments: false,
-          ascii_only: true,
-        },
-        sourceMap: shouldUseSourceMap,
-      }),
-      new ExtractTextPlugin({
-        filename: 'static/css/[name].[chunkhash:8].bundle.css',
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: 'static/js/[name].[chunkhash:8].bundle.js',
-        // Second argument is module use `count`
-        minChunks: function(module) {
-          var context = module.context;
-          return context && context.indexOf('node_modules') >= 0;
-        },
-      }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
+      }),
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: 'static/css/[name].[contenthash:8].css',
+        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
       }),
     ],
   };

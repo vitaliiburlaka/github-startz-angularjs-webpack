@@ -1,8 +1,8 @@
 {
   "name": "angularjs-webpack-seed",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AngularJS components app built with Webpack",
-  "author": "@vitaliiburlaka",
+  "author": "Vitalii Burlaka",
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server --progress --open --config webpack.config.dev.js",
@@ -11,10 +11,13 @@
     "clean": "rimraf ./dist",
     "prebuild": "npm run clean&& npm run lint",
     "build": "cross-env NODE_ENV=production webpack -p --progress",
-    "build:dev": "npm run clean&& webpack -p --progress",
-    "analyze": "npm run clean&& cross-env NODE_ENV=production webpack -p --progress --env.analyze"
+    "analyze": "npm run build -- --env.analyze"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=8.10.0",
+    "npm": ">=5"
+  },
   "dependencies": {
     "@uirouter/angularjs": "^1.0.20",
     "angular": "^1.7.5",
@@ -25,25 +28,31 @@
     "angular-mocks": "^1.7.5",
     "autoprefixer": "^9.3.1",
     "cross-env": "^5.2.0",
-    "css-loader": "^0.28.9",
+    "css-loader": "^1.0.1",
     "eslint": "^5.9.0",
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "file-loader": "^1.1.6",
+    "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.5",
     "ng-annotate-loader": "^0.6.1",
     "ngtemplate-loader": "^2.0.1",
     "node-sass": "^4.10.0",
-    "postcss-loader": "^2.1.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "postcss-flexbugs-fixes": "^4.1.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.4.0",
+    "postcss-safe-parser": "^4.0.1",
     "prettier": "1.15.2",
     "rimraf": "^2.6.2",
     "sass-loader": "^7.1.0",
-    "style-loader": "^0.20.1",
-    "url-loader": "^0.6.2",
-    "webpack": "^3.10.0",
-    "webpack-bundle-analyzer": "^2.10.0",
-    "webpack-dev-server": "^2.11.1"
+    "style-loader": "^0.23.1",
+    "terser-webpack-plugin": "^1.1.0",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.26.0",
+    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   }
 }

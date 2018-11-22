@@ -8,10 +8,49 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var publicPath = '/';
 var appSrc = path.resolve(__dirname, './src');
 
+// Style files regexes
+var cssRegex = /\.css$/;
+var sassRegex = /\.(scss|sass)$/;
+
+// Common function to get style loaders
+var getStyleLoaders = function(cssOptions, preProcessor) {
+  var loaders = [
+    require.resolve('style-loader'),
+    {
+      loader: require.resolve('css-loader'),
+      options: cssOptions,
+    },
+    {
+      loader: require.resolve('postcss-loader'),
+      options: {
+        // Necessary for external CSS imports to work
+        // https://github.com/facebook/create-react-app/issues/2677
+        ident: 'postcss',
+        plugins: function() {
+          return [
+            require('postcss-flexbugs-fixes'),
+            require('postcss-preset-env')({
+              autoprefixer: {
+                flexbox: 'no-2009',
+              },
+              stage: 3,
+            }),
+          ];
+        },
+      },
+    },
+  ];
+  if (preProcessor) {
+    loaders.push(require.resolve(preProcessor));
+  }
+  return loaders;
+};
+
 // Defining config as a `function` allow us to pass the `env` argument
 // which gives us access to the command-line params
 module.exports = function() {
   var config = {
+    mode: 'development',
     devtool: 'cheap-module-source-map',
     entry: {
       app: './src/index.js',
@@ -28,6 +67,11 @@ module.exports = function() {
         path.resolve(info.absoluteResourcePath).replace(/\\/g, '/');
       },
     },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
+    },
     resolve: {
       modules: [path.resolve(__dirname, 'node_modules'), appSrc],
       extensions: ['.js', '.json', '.css', '.scss', '.html'],
@@ -39,6 +83,8 @@ module.exports = function() {
     module: {
       strictExportPresence: true,
       rules: [
+        // Disable require.ensure as it's not a standard language feature.
+        { parser: { requireEnsure: false } },
         {
           test: /src.*\.js$/,
           include: appSrc,
@@ -46,41 +92,16 @@ module.exports = function() {
             // Add AngularJS DI annotations
             require.resolve('ng-annotate-loader'),
           ],
-          // exclude: [/[/\\\\]node_modules[/\\\\]/],
         },
         {
-          test: /\.css$/,
-          use: [require.resolve('style-loader'), require.resolve('css-loader')],
+          test: cssRegex,
+          use: getStyleLoaders({
+            importLoaders: 1,
+          }),
         },
         {
-          test: /\.scss$/,
-          use: [
-            require.resolve('style-loader'),
-            {
-              loader: require.resolve('css-loader'),
-              options: {
-                sourceMap: true,
-                importLoaders: 2,
-              },
-            },
-            {
-              loader: require.resolve('postcss-loader'),
-              options: {
-                sourceMap: true,
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: require.resolve('sass-loader'),
-              options: {
-                outputStyle: 'expanded',
-                sourceMap: true,
-                sourceMapContents: true,
-                // Allow easy "@import" some core styles like variables from anywhere in the app
-                includePaths: [path.resolve(__dirname, './src/assets/scss')],
-              },
-            },
-          ],
+          test: sassRegex,
+          use: getStyleLoaders({ importLoaders: 2 }, 'sass-loader'),
         },
         {
           test: /\.(jpg?g|png|gif|svg)$/i,
@@ -89,7 +110,7 @@ module.exports = function() {
               loader: require.resolve('url-loader'),
               options: {
                 limit: 10000,
-                name: 'static/images/[name].[hash:8].[ext]',
+                name: 'static/media/[name].[hash:8].[ext]',
               },
             },
           ],
@@ -98,10 +119,9 @@ module.exports = function() {
           test: /\.(otf|ttf|woff|woff2)$/,
           use: [
             {
-              loader: require.resolve('url-loader'),
+              loader: require.resolve('file-loader'),
               options: {
-                limit: 10000,
-                name: 'static/fonts/[name].[hash:8].[ext]',
+                name: 'static/media/[name].[hash:8].[ext]',
               },
             },
           ],
@@ -128,13 +148,11 @@ module.exports = function() {
         inject: true,
         template: 'public/index.html',
       }),
-      // Add module names to factory functions so they appear in browser profiler.
-      new webpack.NamedModulesPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
       }),
-      new webpack.HotModuleReplacementPlugin(),
     ],
     devServer: {
       compress: true,
@@ -147,10 +165,6 @@ module.exports = function() {
       historyApiFallback: {
         disableDotRule: true,
       },
-    },
-    // No need for hints during development, because we don't do any optimization
-    performance: {
-      hints: false,
     },
   };
 

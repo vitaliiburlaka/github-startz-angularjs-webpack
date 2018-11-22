@@ -3,13 +3,12 @@
 This is an example AngularJS app that utilizes the components architecture
 and built with Webpack.
 
-The main purpose of that app is to demonstrate the approach that gives you the "escape path"
-to migrate your existing AngularJS app to React, Vue or Angular(2+) or at least to make your dev experience more pleasant. 
+The main purpose of that app is to demonstrate the approach that gives you the "escape hatch"
+to migrate your existing AngularJS app to React, Vue or Angular(2+) or at least to make your dev experience more pleasant.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/) `>=v6.x.x`
-- [Yarn](https://yarnpkg.com) is recommended package manager
+- [Node.js](https://nodejs.org/en/) `>=v8.x.x`
 - [ESLint](http://eslint.org/) plugin for your favorite IDE/Code Editor
 - [EditorConfig](http://editorconfig.org/) plugin for your favorite IDE/Code Editor
 
@@ -29,12 +28,6 @@ Run the following command from the project's directory.
 npm install
 ```
 
-or
-
-```bash
-yarn install
-```
-
 ### Development server
 
 To start the dev server run following command from the project's directory.
@@ -45,28 +38,6 @@ It will start local http server at the `http://localhost:8080` by default.
 npm start
 ```
 
-or
-
-```bash
-yarn start
-```
-
-### Development build
-
-Run the following command from the project's directory.
-
-It will emit bundled files with the soursemaps to the ***./dist*** directory
-
-```bash
-npm run build
-```
-
-or
-
-```bash
-yarn build
-```
-
 ### Production build
 
 To build optimized bundle run following command.
@@ -74,25 +45,13 @@ To build optimized bundle run following command.
 It will emit optimized and minified bundle to the ***./dist*** directory
 
 ```bash
-npm run deploy
-```
-
-or
-
-```bash
-yarn deploy
+npm run build
 ```
 
 ### App Bundle Analyzing
 
 ```bash
 npm run analyze
-```
-
-or
-
-```bash
-yarn analyze
 ```
 
 ### Code linting
@@ -103,10 +62,10 @@ To check code for common errors or style problems run:
 npm run lint
 ```
 
-or
+To check the code and fix the issues run:
 
 ```bash
-yarn lint
+npm run lint:fix
 ```
 
 #### Thanks to
