@@ -34,7 +34,6 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
       loader: require.resolve('postcss-loader'),
       options: {
         // Necessary for external CSS imports to work
-        // https://github.com/facebook/create-react-app/issues/2677
         ident: 'postcss',
         plugins: function() {
           return [
@@ -62,8 +61,6 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
   return loaders;
 };
 
-// Defining config as a `function` allow us to pass the `env` argument
-// which gives us access to the command-line params
 module.exports = function(env) {
   var config = {
     mode: 'production',
@@ -87,9 +84,7 @@ module.exports = function(env) {
             compress: {
               ecma: 5,
               warnings: false,
-              // https://github.com/mishoo/UglifyJS2/issues/2011
               comparisons: false,
-              // https://github.com/terser-js/terser/issues/120
               inline: 2,
             },
             mangle: {
@@ -103,7 +98,6 @@ module.exports = function(env) {
             },
           },
           // Use multi-process parallel running to improve the build speed
-          // Default number of concurrent runs: os.cpus().length - 1
           parallel: true,
           // Enable file caching
           cache: true,
@@ -115,11 +109,9 @@ module.exports = function(env) {
             parser: safePostCssParser,
             map: shouldUseSourceMap
               ? {
-                  // `inline: false` forces the sourcemap to be output into a
-                  // separate file
+                  // Forces the sourcemap to be output into a separate file
                   inline: false,
-                  // `annotation: true` appends the sourceMappingURL to the end of
-                  // the css file, helping the browser find the sourcemap
+                  // Appends the sourceMappingURL to the end of the css file
                   annotation: true,
                 }
               : false,
@@ -157,8 +149,6 @@ module.exports = function(env) {
             importLoaders: 1,
             sourceMap: shouldUseSourceMap,
           }),
-          // Remove this when webpack adds a warning or an error for this.
-          // See https://github.com/webpack/webpack/issues/6571
           sideEffects: true,
         },
         {
@@ -170,8 +160,6 @@ module.exports = function(env) {
             },
             'sass-loader'
           ),
-          // Remove this when webpack adds a warning or an error for this.
-          // See https://github.com/webpack/webpack/issues/6571
           sideEffects: true,
         },
         {
@@ -236,21 +224,16 @@ module.exports = function(env) {
         IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
       }),
       new MiniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
         filename: 'static/css/[name].[contenthash:8].css',
         chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
       }),
-    ],
+      env &&
+        env.analyze &&
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+        }),
+    ].filter(Boolean),
   };
-
-  if (env && env.analyze) {
-    config.plugins.push(
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-      })
-    );
-  }
 
   return config;
 };

@@ -4,7 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// Always serve from the root in development. This makes config easier.
+// Always serve from the root in development.
 var publicPath = '/';
 var appSrc = path.resolve(__dirname, './src');
 
@@ -23,8 +23,6 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
     {
       loader: require.resolve('postcss-loader'),
       options: {
-        // Necessary for external CSS imports to work
-        // https://github.com/facebook/create-react-app/issues/2677
         ident: 'postcss',
         plugins: function() {
           return [
@@ -46,8 +44,6 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
   return loaders;
 };
 
-// Defining config as a `function` allow us to pass the `env` argument
-// which gives us access to the command-line params
 module.exports = function() {
   var config = {
     mode: 'development',
@@ -60,7 +56,6 @@ module.exports = function() {
       pathinfo: true,
       filename: 'static/js/bundle.js',
       chunkFilename: 'static/js/[name].chunk.js',
-      // This is the URL that app is served from. We use "/" in development.
       publicPath: publicPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: function(info) {
