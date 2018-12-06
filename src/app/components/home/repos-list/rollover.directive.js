@@ -18,20 +18,13 @@ function rolloverDirective() {
         const yCoor = halfH - (event.pageY - this.offsetTop);
 
         // Calculate max rotation degree
-        const xDeg = (yCoor / halfH) * tiltLimit + 'deg';
-        const yDeg = (xCoor / halfW) * -tiltLimit + 'deg'; // Should be negative value
+        const xDeg = (yCoor / halfH) * tiltLimit;
+        const yDeg = (xCoor / halfW) * -tiltLimit; // Should be negative value
 
-        const transformGen = function() {
-          return (
-            'perspective(160px) translate3d(0, -2px, 0) scale(1.1) rotateX(' +
-            xDeg +
-            ') rotateY(' +
-            yDeg +
-            ')'
-          );
-        };
+        const transformGen = (xDeg, yDeg) =>
+          `perspective(160px) translate3d(0, -2px, 0) scale(1.1) rotateX(${xDeg}deg) rotateY(${yDeg}deg)`;
 
-        this.style.transform = transformGen();
+        this.style.transform = transformGen(xDeg, yDeg);
       }
 
       function handleMouseOut() {
