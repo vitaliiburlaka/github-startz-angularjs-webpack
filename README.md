@@ -1,12 +1,12 @@
-# AngularJS Webpack Seed
+# ✨ GitHub Starz ✨ - An AngularJS ES6 Webpack Seed
 
-This is an example AngularJS app that utilizes the components architecture
+This is an example AngularJS ES6 app that utilizes the components architecture
 and built with Webpack.
 
 The main purpose of that app is to demonstrate the approach that gives you the "escape hatch"
 to migrate your existing AngularJS app to React, Vue or Angular(2+) or at least to make your dev experience more pleasant.
 
-## Prerequisites
+## Requirements
 
 - [Node.js](https://nodejs.org/en/) `>=v8.x.x`
 - [ESLint](http://eslint.org/) plugin for your favorite IDE/Code Editor
@@ -14,10 +14,10 @@ to migrate your existing AngularJS app to React, Vue or Angular(2+) or at least 
 
 ## Installation
 
-Clone project repository to your machine.
+Clone project repository.
 
 ```bash
-git clone git@github.com:vitaliiburlaka/angularjs-webpack-seed.git
+git clone git@github.com:vitaliiburlaka/github-startz-angularjs-webpack.git
 ```
 
 ### Install dependencies
@@ -74,4 +74,4 @@ npm run lint:fix
 
 @webpack [webpack.js.org](https://webpack.js.org/) for the awesome tool.
 
-@react [reactjs.org](https://reactjs.org/) for the inspiration.
+@react [reactjs.org](https://reactjs.org/) that showed the better way to build UI.

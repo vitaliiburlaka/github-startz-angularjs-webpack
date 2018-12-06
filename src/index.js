@@ -1,2 +1,3 @@
-require('./app/app.module');
-require('./assets/scss/main.scss');
+import './app/app.module';
+import 'normalize.css';
+import './assets/scss/main.scss';

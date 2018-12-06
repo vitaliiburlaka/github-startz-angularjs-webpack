@@ -1,27 +1,24 @@
-var angular = require('angular');
-var ngAnimate = require('angular-animate');
-var uiRouter = require('@uirouter/angularjs').default;
+import { module as _module } from 'angular';
+import ngAnimate from 'angular-animate';
+import uiRouter from '@uirouter/angularjs';
 
-require('normalize.css');
+import APP_CONFIG from './app-config.constant';
+import appConfig from './app.config';
 
-var APP_CONFIG = require('./app-config.constant');
-var appConfig = require('./app.config');
+import appRoute from './app.route';
+import appComponent from './app.component';
 
-var appRoute = require('./app.route');
-var appComponent = require('./app.component');
+import homeModule from './containers/home-container';
+import appLoaderModule from './components/common/app-loader';
 
-var homeModule = require('./containers/home-container');
-var appLoaderModule = require('./components/common/app-loader');
+export default _module('app', [
+  ngAnimate,
+  uiRouter,
 
-angular
-  .module('app', [
-    ngAnimate,
-    uiRouter,
-
-    // App Modules
-    homeModule,
-    appLoaderModule,
-  ])
+  // App Modules
+  homeModule,
+  appLoaderModule,
+])
   .constant('APP_CONFIG', APP_CONFIG)
   .config(appConfig)
   .config(appRoute)

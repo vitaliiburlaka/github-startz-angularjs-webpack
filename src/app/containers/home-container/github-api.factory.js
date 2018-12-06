@@ -1,10 +1,10 @@
-function GithubApiService($http, $window) {
+function GitHubApiService($http, $window) {
   'ngInject';
 
-  var service = {};
+  const service = {};
 
   service.fetchPopularRepos = function(language) {
-    var encodedURI = $window.encodeURI(
+    const encodedURI = $window.encodeURI(
       'https://api.github.com/search/repositories?q=stars:>1+language:' +
         language.toLowerCase() +
         '&sort=stars&order=desc&type=Repositories'
@@ -12,10 +12,10 @@ function GithubApiService($http, $window) {
 
     return $http
       .get(encodedURI)
-      .then(function(response) {
+      .then(response => {
         return response.data.items;
       })
-      .catch(function(error) {
+      .catch(error => {
         console.warn(error);
         return null;
       });
@@ -24,4 +24,4 @@ function GithubApiService($http, $window) {
   return service;
 }
 
-module.exports = GithubApiService;
+export default GitHubApiService;

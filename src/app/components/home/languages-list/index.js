@@ -1,7 +1,8 @@
-var angular = require('angular');
+import { module as _module } from 'angular';
 
-var languagesList = require('./languages-list.component');
+import languagesList from './languages-list.component';
 
-module.exports = angular
-  .module('languagesList.component', [])
-  .component('languagesList', languagesList).name;
+export default _module('languagesList.component', []).component(
+  'languagesList',
+  languagesList
+).name;

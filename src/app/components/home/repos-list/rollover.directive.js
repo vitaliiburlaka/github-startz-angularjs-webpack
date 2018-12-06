@@ -2,26 +2,26 @@ function rolloverDirective() {
   return {
     restrict: 'A',
     scope: {},
-    link: function(scope, element) {
-      var el = element[0];
+    link: (scope, element) => {
+      const el = element[0];
 
       el.addEventListener('mousemove', handleMouseMove, { passive: true });
       el.addEventListener('mouseout', handleMouseOut, { passive: true });
 
       function handleMouseMove(event) {
-        var tiltLimit = 5;
-        var halfW = this.clientWidth / 2;
-        var halfH = this.clientHeight / 2;
+        const tiltLimit = 5;
+        const halfW = this.clientWidth / 2;
+        const halfH = this.clientHeight / 2;
 
         // Calculate coordinates
-        var xCoor = halfW - (event.pageX - this.offsetLeft);
-        var yCoor = halfH - (event.pageY - this.offsetTop);
+        const xCoor = halfW - (event.pageX - this.offsetLeft);
+        const yCoor = halfH - (event.pageY - this.offsetTop);
 
         // Calculate max rotation degree
-        var xDeg = (yCoor / halfH) * tiltLimit + 'deg';
-        var yDeg = (xCoor / halfW) * -tiltLimit + 'deg'; // Should be negative value
+        const xDeg = (yCoor / halfH) * tiltLimit + 'deg';
+        const yDeg = (xCoor / halfW) * -tiltLimit + 'deg'; // Should be negative value
 
-        var transformGen = function() {
+        const transformGen = function() {
           return (
             'perspective(160px) translate3d(0, -2px, 0) scale(1.1) rotateX(' +
             xDeg +
@@ -41,4 +41,4 @@ function rolloverDirective() {
   };
 }
 
-module.exports = rolloverDirective;
+export default rolloverDirective;

@@ -1,8 +1,8 @@
-var template = require('./app.html');
+import template from './app.html';
 
-var appComponent = {
+const appComponent = {
   bindings: {},
   templateUrl: template,
 };
 
-module.exports = appComponent;
+export default appComponent;

@@ -1,11 +1,11 @@
-var template = require('./repos-list.html');
-require('./repos-list.scss');
+import template from './repos-list.html';
+import './repos-list.scss';
 
-var reposList = {
+const reposList = {
   bindings: {
     repos: '<',
   },
   templateUrl: template,
 };
 
-module.exports = reposList;
+export default reposList;

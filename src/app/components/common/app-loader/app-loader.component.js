@@ -1,24 +1,24 @@
-var template = require('./app-loader.html');
-require('./app-loader.scss');
+import template from './app-loader.html';
+import './app-loader.scss';
 
-var appLoader = {
+const appLoader = {
   bindings: {},
   templateUrl: template,
   controller: function($scope, $http, $element, $timeout) {
     'ngInject';
 
-    var ctrl = this;
+    const ctrl = this;
 
     ctrl.isLoading = false;
     ctrl.isActive = false;
 
-    var _count = 0;
-    var intervalCounterId = 0;
-    var _hasPendingRequests = function() {
+    let _count = 0;
+    let intervalCounterId = 0;
+    const _hasPendingRequests = function() {
       return $http.pendingRequests.length > 0;
     };
 
-    $scope.$watch(_hasPendingRequests, function(newVal, oldVal) {
+    $scope.$watch(_hasPendingRequests, (newVal, oldVal) => {
       if (newVal !== oldVal) {
         ctrl.isLoading = newVal;
       }
@@ -46,7 +46,7 @@ var appLoader = {
     function completeProgress() {
       _count = 100;
       clearInterval(intervalCounterId);
-      $timeout(function() {
+      $timeout(() => {
         $element[0].firstChild.firstElementChild.style.width = _count + '%';
         _count = 0;
         ctrl.isActive = false;
@@ -55,4 +55,4 @@ var appLoader = {
   },
 };
 
-module.exports = appLoader;
+export default appLoader;

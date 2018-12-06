@@ -1,20 +1,24 @@
 'use strict';
 
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const webpackDevServerConfig = require('./webpackDevServer.config');
 
 // Always serve from the root in development.
-var publicPath = '/';
-var appSrc = path.resolve(__dirname, './src');
+const publicPath = '/';
+const appSrc = path.resolve(__dirname, './src');
+const appIndexJs = './src/index.js';
+const appIndexHtml = 'public/index.html';
 
 // Style files regexes
-var cssRegex = /\.css$/;
-var sassRegex = /\.(scss|sass)$/;
+const cssRegex = /\.css$/;
+const sassRegex = /\.(scss|sass)$/;
 
 // Common function to get style loaders
-var getStyleLoaders = function(cssOptions, preProcessor) {
-  var loaders = [
+const getStyleLoaders = (cssOptions, preProcessor) => {
+  const loaders = [
     require.resolve('style-loader'),
     {
       loader: require.resolve('css-loader'),
@@ -24,17 +28,15 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
       loader: require.resolve('postcss-loader'),
       options: {
         ident: 'postcss',
-        plugins: function() {
-          return [
-            require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              autoprefixer: {
-                flexbox: 'no-2009',
-              },
-              stage: 3,
-            }),
-          ];
-        },
+        plugins: () => [
+          require('postcss-flexbugs-fixes'),
+          require('postcss-preset-env')({
+            autoprefixer: {
+              flexbox: 'no-2009',
+            },
+            stage: 3,
+          }),
+        ],
       },
     },
   ];
@@ -44,124 +46,103 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
   return loaders;
 };
 
-module.exports = function() {
-  var config = {
-    mode: 'development',
-    devtool: 'cheap-module-source-map',
-    entry: {
-      app: './src/index.js',
+module.exports = {
+  mode: 'development',
+  devtool: 'cheap-module-source-map',
+  entry: ['@babel/polyfill', appIndexJs],
+  output: {
+    // Add /* filename */ comments to generated require()s in the output.
+    pathinfo: true,
+    filename: 'static/js/bundle.js',
+    chunkFilename: 'static/js/[name].chunk.js',
+    publicPath: publicPath,
+    // Point sourcemap entries to original disk location (format as URL on Windows)
+    devtoolModuleFilenameTemplate: function(info) {
+      path.resolve(info.absoluteResourcePath).replace(/\\/g, '/');
     },
-    output: {
-      // Add /* filename */ comments to generated require()s in the output.
-      pathinfo: true,
-      filename: 'static/js/bundle.js',
-      chunkFilename: 'static/js/[name].chunk.js',
-      publicPath: publicPath,
-      // Point sourcemap entries to original disk location (format as URL on Windows)
-      devtoolModuleFilenameTemplate: function(info) {
-        path.resolve(info.absoluteResourcePath).replace(/\\/g, '/');
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+  resolve: {
+    modules: [path.resolve(__dirname, 'node_modules'), appSrc],
+    extensions: ['.js', '.json', '.css', '.scss', '.html'],
+    alias: {
+      // Alias to the assets folder for easy "import"
+      assets: path.resolve(__dirname, 'src/assets/'),
+    },
+  },
+  module: {
+    strictExportPresence: true,
+    rules: [
+      // Disable require.ensure as it's not a standard language feature.
+      { parser: { requireEnsure: false } },
+      {
+        test: /src.*\.js$/,
+        include: appSrc,
+        loader: require.resolve('babel-loader'),
       },
-    },
-    optimization: {
-      splitChunks: {
-        chunks: 'all',
+      {
+        test: cssRegex,
+        use: getStyleLoaders({
+          importLoaders: 1,
+        }),
       },
-    },
-    resolve: {
-      modules: [path.resolve(__dirname, 'node_modules'), appSrc],
-      extensions: ['.js', '.json', '.css', '.scss', '.html'],
-      alias: {
-        // Alias to the assets folder for easy "import"
-        assets: path.resolve(__dirname, 'src/assets/'),
+      {
+        test: sassRegex,
+        use: getStyleLoaders({ importLoaders: 2 }, 'sass-loader'),
       },
-    },
-    module: {
-      strictExportPresence: true,
-      rules: [
-        // Disable require.ensure as it's not a standard language feature.
-        { parser: { requireEnsure: false } },
-        {
-          test: /src.*\.js$/,
-          include: appSrc,
-          use: [
-            // Add AngularJS DI annotations
-            require.resolve('ng-annotate-loader'),
-          ],
-        },
-        {
-          test: cssRegex,
-          use: getStyleLoaders({
-            importLoaders: 1,
-          }),
-        },
-        {
-          test: sassRegex,
-          use: getStyleLoaders({ importLoaders: 2 }, 'sass-loader'),
-        },
-        {
-          test: /\.(jpg?g|png|gif|svg)$/i,
-          use: [
-            {
-              loader: require.resolve('url-loader'),
-              options: {
-                limit: 10000,
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
+      {
+        test: /\.(jpg?g|png|gif|svg)$/i,
+        use: [
+          {
+            loader: require.resolve('url-loader'),
+            options: {
+              limit: 10000,
+              name: 'static/media/[name].[hash:8].[ext]',
             },
-          ],
-        },
-        {
-          test: /\.(otf|ttf|woff|woff2)$/,
-          use: [
-            {
-              loader: require.resolve('file-loader'),
-              options: {
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
+          },
+        ],
+      },
+      {
+        test: /\.(otf|ttf|woff|woff2)$/,
+        use: [
+          {
+            loader: require.resolve('file-loader'),
+            options: {
+              name: 'static/media/[name].[hash:8].[ext]',
             },
-          ],
-        },
-        {
-          test: /\.html$/,
-          use: [
-            {
-              // Compiles all html to js as AngularJS $templateCache
-              loader: require.resolve('ngtemplate-loader'),
-              options: {
-                relativeTo: appSrc,
-              },
+          },
+        ],
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            // Compiles all html to js as AngularJS $templateCache
+            loader: require.resolve('ngtemplate-loader'),
+            options: {
+              relativeTo: appSrc,
             },
-            require.resolve('html-loader'),
-          ],
-          // Excludes index.html as shouldn't be in $templateCache
-          exclude: /index.html/,
-        },
-      ],
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-        inject: true,
-        template: 'public/index.html',
-      }),
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
-      }),
+          },
+          'html-loader',
+        ],
+        // Excludes index.html as shouldn't be in $templateCache
+        exclude: /index.html/,
+      },
     ],
-    devServer: {
-      compress: true,
-      clientLogLevel: 'none',
-      contentBase: publicPath,
-      watchContentBase: true,
-      hot: true,
-      publicPath: publicPath,
-      overlay: false,
-      historyApiFallback: {
-        disableDotRule: true,
-      },
-    },
-  };
-
-  return config;
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: appIndexHtml,
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
+  ],
+  devServer: webpackDevServerConfig,
 };
