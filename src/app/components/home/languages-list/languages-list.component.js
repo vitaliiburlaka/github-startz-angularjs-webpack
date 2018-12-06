@@ -1,7 +1,7 @@
-var template = require('./languages-list.html');
-require('./languages-list.scss');
+import template from './languages-list.html';
+import './languages-list.scss';
 
-var languagesList = {
+const languagesList = {
   bindings: {
     languages: '<',
     selectedLanguage: '<',
@@ -10,4 +10,4 @@ var languagesList = {
   templateUrl: template,
 };
 
-module.exports = languagesList;
+export default languagesList;

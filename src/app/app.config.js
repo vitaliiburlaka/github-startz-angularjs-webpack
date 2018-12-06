@@ -6,33 +6,34 @@ function appConfig(
   APP_CONFIG
 ) {
   'ngInject';
+  const { isProd } = APP_CONFIG;
 
   $locationProvider.html5Mode({ enabled: true, requireBase: false });
   $locationProvider.hashPrefix('!');
 
   // Disable Debug logs
-  $logProvider.debugEnabled(!APP_CONFIG.is_prod);
+  $logProvider.debugEnabled(!isProd);
 
   // Disable Debug Data
-  $compileProvider.debugInfoEnabled(!APP_CONFIG.is_prod);
+  $compileProvider.debugInfoEnabled(!isProd);
 
   // Disable comment and css class directives
   $compileProvider.commentDirectivesEnabled(false);
   $compileProvider.cssClassDirectivesEnabled(false);
 
   // HTTP requests inretceptor
-  $httpProvider.interceptors.push(function($q) {
+  $httpProvider.interceptors.push($q => {
     'ngInject';
     return {
-      request: function(config) {
+      request: config => {
         // Here you could change the request config
         return config;
       },
-      responseError: function(rejection) {
+      responseError: rejection => {
         return $q.reject(rejection);
       },
     };
   });
 }
 
-module.exports = appConfig;
+export default appConfig;

@@ -1,28 +1,30 @@
 'use strict';
 
-var path = require('path');
-var webpack = require('webpack');
-var TerserPlugin = require('terser-webpack-plugin');
-var MiniCssExtractPlugin = require('mini-css-extract-plugin');
-var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-var safePostCssParser = require('postcss-safe-parser');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+const path = require('path');
+const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const safePostCssParser = require('postcss-safe-parser');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
-var publicPath = '/';
-var buildPath = path.resolve(__dirname, 'dist');
-var appSrc = path.resolve(__dirname, './src');
-var shouldUseSourceMap = process.env.NODE_ENV !== 'production';
-var isEnvProduction = process.env.NODE_ENV === 'production';
+const publicPath = '/';
+const appBuild = path.resolve(__dirname, 'dist');
+const appSrc = path.resolve(__dirname, './src');
+const appIndexJs = './src/index.js';
+const appIndexHtml = 'public/index.html';
+const shouldUseSourceMap = process.env.NODE_ENV !== 'production';
+const isEnvProduction = process.env.NODE_ENV === 'production';
 
 // Style files regexes
-var cssRegex = /\.css$/;
-var sassRegex = /\.(scss|sass)$/;
+const cssRegex = /\.css$/;
+const sassRegex = /\.(scss|sass)$/;
 
 // Common function to get style loaders
-var getStyleLoaders = function(cssOptions, preProcessor) {
-  var loaders = [
+const getStyleLoaders = (cssOptions, preProcessor) => {
+  const loaders = [
     {
       loader: MiniCssExtractPlugin.loader,
     },
@@ -35,17 +37,15 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
       options: {
         // Necessary for external CSS imports to work
         ident: 'postcss',
-        plugins: function() {
-          return [
-            require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              autoprefixer: {
-                flexbox: 'no-2009',
-              },
-              stage: 3,
-            }),
-          ];
-        },
+        plugins: () => [
+          require('postcss-flexbugs-fixes'),
+          require('postcss-preset-env')({
+            autoprefixer: {
+              flexbox: 'no-2009',
+            },
+            stage: 3,
+          }),
+        ],
         sourceMap: shouldUseSourceMap,
       },
     },
@@ -61,17 +61,15 @@ var getStyleLoaders = function(cssOptions, preProcessor) {
   return loaders;
 };
 
-module.exports = function(env) {
-  var config = {
+module.exports = env => {
+  return {
     mode: 'production',
     // Stop compilation early in production
     bail: isEnvProduction,
     devtool: shouldUseSourceMap ? 'source-map' : false,
-    entry: {
-      app: './src/index.js',
-    },
+    entry: ['@babel/polyfill', appIndexJs],
     output: {
-      path: buildPath,
+      path: appBuild,
       filename: 'static/js/[name].[chunkhash:8].js',
       chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
       publicPath: publicPath,
@@ -81,6 +79,9 @@ module.exports = function(env) {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
+            parse: {
+              ecma: 8,
+            },
             compress: {
               ecma: 5,
               warnings: false,
@@ -138,10 +139,7 @@ module.exports = function(env) {
         {
           test: /src.*\.js$/,
           include: appSrc,
-          use: [
-            // Add AngularJS DI annotations
-            require.resolve('ng-annotate-loader'),
-          ],
+          loader: require.resolve('babel-loader'),
         },
         {
           test: cssRegex,
@@ -195,7 +193,7 @@ module.exports = function(env) {
                 relativeTo: appSrc,
               },
             },
-            require.resolve('html-loader'),
+            'html-loader',
           ],
           // Excludes index.html as shouldn't be in $templateCache
           exclude: /index.html/,
@@ -205,7 +203,7 @@ module.exports = function(env) {
     plugins: [
       new HtmlWebpackPlugin({
         inject: true,
-        template: 'public/index.html',
+        template: appIndexHtml,
         minify: {
           removeComments: true,
           collapseWhitespace: true,
@@ -221,7 +219,6 @@ module.exports = function(env) {
       }),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        IS_PROD: JSON.stringify(process.env.NODE_ENV === 'production'),
       }),
       new MiniCssExtractPlugin({
         filename: 'static/css/[name].[contenthash:8].css',
@@ -234,6 +231,4 @@ module.exports = function(env) {
         }),
     ].filter(Boolean),
   };
-
-  return config;
 };

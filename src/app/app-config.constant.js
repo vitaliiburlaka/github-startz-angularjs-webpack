@@ -1,7 +1,6 @@
-/* eslint no-undef: 0 */
 // Constants placeholders would be replaced to values at Webpack bundle process
-var APP_CONFIG = {
-  is_prod: IS_PROD,
+const APP_CONFIG = {
+  isProd: process.env.NODE_ENV === 'production',
 };
 
-module.exports = APP_CONFIG;
+export default APP_CONFIG;

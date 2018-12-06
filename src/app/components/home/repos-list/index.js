@@ -1,9 +1,8 @@
-var angular = require('angular');
+import { module as _module } from 'angular';
 
-var reposList = require('./repos-list.component');
-var rolloverDirective = require('./rollover.directive');
+import reposList from './repos-list.component';
+import rolloverDirective from './rollover.directive';
 
-module.exports = angular
-  .module('reposList.component', [])
+export default _module('reposList.component', [])
   .component('reposList', reposList)
   .directive('rollover', rolloverDirective).name;

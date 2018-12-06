@@ -1,15 +1,18 @@
-var angular = require('angular');
-var uiRouter = require('@uirouter/angularjs').default;
+import { module as _module } from 'angular';
+import uiRouter from '@uirouter/angularjs';
 
-var homeRoute = require('./home.route');
-var homeContainer = require('./home-container.component');
-var GithubApiService = require('./github-api.factory');
+import homeRoute from './home.route';
+import homeContainer from './home-container.component';
+import GitHubApiService from './github-api.factory';
 
-var languagesListComponent = require('../../components/home/languages-list');
-var repoListComponent = require('../../components/home/repos-list');
+import languagesListComponent from '../../components/home/languages-list';
+import repoListComponent from '../../components/home/repos-list';
 
-module.exports = angular
-  .module('app.home', [uiRouter, languagesListComponent, repoListComponent])
+export default _module('app.home', [
+  uiRouter,
+  languagesListComponent,
+  repoListComponent,
+])
   .config(homeRoute)
   .component('homeContainer', homeContainer)
-  .factory('GithubApiService', GithubApiService).name;
+  .factory('GitHubApiService', GitHubApiService).name;

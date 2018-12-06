@@ -1,41 +1,41 @@
-var template = require('./home-container.html');
-require('./home-container.scss');
+import template from './home-container.html';
+import './home-container.scss';
 
-var homeContainer = {
+const homeContainer = {
   bindings: {
     popularReposData: '<',
   },
   templateUrl: template,
-  controller: function(GithubApiService) {
+  controller: function(GitHubApiService) {
     'ngInject';
 
-    var ctrl = this;
+    const ctrl = this;
     ctrl.languages = [
       'All',
       'JavaScript',
       'TypeScript',
       'Java',
       'Python',
-      'Ruby',
+      'Swift',
     ];
     ctrl.selectedLanguage = 'All';
     ctrl.repos = null;
 
-    ctrl.$onInit = function() {
+    ctrl.$onInit = () => {
       ctrl.repos = ctrl.popularReposData;
     };
 
-    ctrl.onSelect = function(lang) {
+    ctrl.onSelect = lang => {
       ctrl.selectedLanguage = lang;
       updateLanguage(lang);
     };
 
     function updateLanguage(lang) {
-      GithubApiService.fetchPopularRepos(lang).then(function(data) {
+      GitHubApiService.fetchPopularRepos(lang).then(data => {
         ctrl.repos = data;
       });
     }
   },
 };
 
-module.exports = homeContainer;
+export default homeContainer;

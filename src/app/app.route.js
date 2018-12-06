@@ -11,4 +11,4 @@ function appRoute($stateProvider) {
   });
 }
 
-module.exports = appRoute;
+export default appRoute;

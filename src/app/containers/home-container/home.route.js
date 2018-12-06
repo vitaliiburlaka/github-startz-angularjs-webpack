@@ -10,10 +10,10 @@ function homeRoute($stateProvider) {
       },
     },
     resolve: {
-      _popularReposData: function(GithubApiService) {
+      _popularReposData: GitHubApiService => {
         'ngInject';
 
-        return GithubApiService.fetchPopularRepos('all').then(function(data) {
+        return GitHubApiService.fetchPopularRepos('all').then(data => {
           return data;
         });
       },
@@ -21,4 +21,4 @@ function homeRoute($stateProvider) {
   });
 }
 
-module.exports = homeRoute;
+export default homeRoute;

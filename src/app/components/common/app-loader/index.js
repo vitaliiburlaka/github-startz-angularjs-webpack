@@ -1,7 +1,8 @@
-var angular = require('angular');
+import { module as _module } from 'angular';
 
-var appLoader = require('./app-loader.component');
+import appLoader from './app-loader.component';
 
-module.exports = angular
-  .module('appLoader.component', [])
-  .component('appLoader', appLoader).name;
+export default _module('appLoader.component', []).component(
+  'appLoader',
+  appLoader
+).name;
