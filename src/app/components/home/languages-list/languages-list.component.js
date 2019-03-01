@@ -1,5 +1,5 @@
-import template from './languages-list.html';
-import './languages-list.scss';
+import template from './languages-list.html'
+import './languages-list.scss'
 
 const languagesList = {
   bindings: {
@@ -8,6 +8,6 @@ const languagesList = {
     onSelect: '&',
   },
   templateUrl: template,
-};
+}
 
-export default languagesList;
+export default languagesList

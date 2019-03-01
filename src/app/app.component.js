@@ -1,8 +1,8 @@
-import template from './app.html';
+import template from './app.html'
 
 const appComponent = {
   bindings: {},
   templateUrl: template,
-};
+}
 
-export default appComponent;
+export default appComponent

@@ -1,5 +1,5 @@
-import template from './home-container.html';
-import './home-container.scss';
+import template from './home-container.html'
+import './home-container.scss'
 
 const homeContainer = {
   bindings: {
@@ -7,9 +7,9 @@ const homeContainer = {
   },
   templateUrl: template,
   controller: function(GitHubApiService) {
-    'ngInject';
+    'ngInject'
 
-    const ctrl = this;
+    const ctrl = this
     ctrl.languages = [
       'All',
       'JavaScript',
@@ -17,25 +17,25 @@ const homeContainer = {
       'Java',
       'Python',
       'Swift',
-    ];
-    ctrl.selectedLanguage = 'All';
-    ctrl.repos = null;
+    ]
+    ctrl.selectedLanguage = 'All'
+    ctrl.repos = null
 
     ctrl.$onInit = () => {
-      ctrl.repos = ctrl.popularReposData;
-    };
+      ctrl.repos = ctrl.popularReposData
+    }
 
     ctrl.onSelect = lang => {
-      ctrl.selectedLanguage = lang;
-      updateLanguage(lang);
-    };
+      ctrl.selectedLanguage = lang
+      updateLanguage(lang)
+    }
 
     function updateLanguage(lang) {
       GitHubApiService.fetchPopularRepos(lang).then(data => {
-        ctrl.repos = data;
-      });
+        ctrl.repos = data
+      })
     }
   },
-};
+}
 
-export default homeContainer;
+export default homeContainer

@@ -1,12 +1,12 @@
-import { module as _module } from 'angular';
-import uiRouter from '@uirouter/angularjs';
+import { module as _module } from 'angular'
+import uiRouter from '@uirouter/angularjs'
 
-import homeRoute from './home.route';
-import homeContainer from './home-container.component';
-import GitHubApiService from './github-api.factory';
+import homeRoute from './home.route'
+import homeContainer from './home-container.component'
+import GitHubApiService from './github-api.factory'
 
-import languagesListComponent from '../../components/home/languages-list';
-import repoListComponent from '../../components/home/repos-list';
+import languagesListComponent from '../../components/home/languages-list'
+import repoListComponent from '../../components/home/repos-list'
 
 export default _module('app.home', [
   uiRouter,
@@ -15,4 +15,4 @@ export default _module('app.home', [
 ])
   .config(homeRoute)
   .component('homeContainer', homeContainer)
-  .factory('GitHubApiService', GitHubApiService).name;
+  .factory('GitHubApiService', GitHubApiService).name

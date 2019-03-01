@@ -1,26 +1,26 @@
-'use strict';
+'use strict'
 
-const path = require('path');
-const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const safePostCssParser = require('postcss-safe-parser');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const TerserPlugin = require('terser-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const safePostCssParser = require('postcss-safe-parser')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+  .BundleAnalyzerPlugin
 
-const publicPath = '/';
-const appBuild = path.resolve(__dirname, 'dist');
-const appSrc = path.resolve(__dirname, './src');
-const appIndexJs = './src/index.js';
-const appIndexHtml = 'public/index.html';
-const shouldUseSourceMap = process.env.NODE_ENV !== 'production';
-const isEnvProduction = process.env.NODE_ENV === 'production';
+const publicPath = '/'
+const appBuild = path.resolve(__dirname, 'dist')
+const appSrc = path.resolve(__dirname, './src')
+const appIndexJs = './src/index.js'
+const appIndexHtml = 'public/index.html'
+const shouldUseSourceMap = process.env.NODE_ENV !== 'production'
+const isEnvProduction = process.env.NODE_ENV === 'production'
 
 // Style files regexes
-const cssRegex = /\.css$/;
-const sassRegex = /\.(scss|sass)$/;
+const cssRegex = /\.css$/
+const sassRegex = /\.(scss|sass)$/
 
 // Common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -49,17 +49,17 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
         sourceMap: shouldUseSourceMap,
       },
     },
-  ];
+  ]
   if (preProcessor) {
     loaders.push({
       loader: require.resolve(preProcessor),
       options: {
         sourceMap: shouldUseSourceMap,
       },
-    });
+    })
   }
-  return loaders;
-};
+  return loaders
+}
 
 module.exports = env => {
   return {
@@ -230,5 +230,5 @@ module.exports = env => {
           analyzerMode: 'static',
         }),
     ].filter(Boolean),
-  };
-};
+  }
+}

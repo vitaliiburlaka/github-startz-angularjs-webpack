@@ -12,7 +12,7 @@
     "prettier": "prettier \"**/*.{json,md,css,scss,html}\"",
     "clean": "rimraf ./dist",
     "prebuild": "npm run clean && npm run lint",
-    "build": "cross-env NODE_ENV=production webpack -p --progress",
+    "build": "cross-env NODE_ENV=production webpack -p --progress --config webpack.config.prod.js",
     "analyze": "npm run build -- --env.analyze"
   },
   "license": "MIT",

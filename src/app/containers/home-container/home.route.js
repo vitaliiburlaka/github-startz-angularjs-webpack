@@ -1,5 +1,5 @@
 function homeRoute($stateProvider) {
-  'ngInject';
+  'ngInject'
 
   $stateProvider.state('root.home', {
     url: '/',
@@ -11,14 +11,14 @@ function homeRoute($stateProvider) {
     },
     resolve: {
       _popularReposData: GitHubApiService => {
-        'ngInject';
+        'ngInject'
 
         return GitHubApiService.fetchPopularRepos('all').then(data => {
-          return data;
-        });
+          return data
+        })
       },
     },
-  });
+  })
 }
 
-export default homeRoute;
+export default homeRoute

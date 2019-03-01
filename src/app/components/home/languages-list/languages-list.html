@@ -1,8 +1,10 @@
-<ul class='languages-list'>
-  <li class="languages-list__item"
+<ul class="languages-list">
+  <li
+    class="languages-list__item"
     ng-class="{'languages-list__item--selected': lang === $ctrl.selectedLanguage}"
     ng-repeat="lang in $ctrl.languages"
-    ng-click="$ctrl.onSelect({lang: lang})">
-      {{lang}}
+    ng-click="$ctrl.onSelect({lang: lang})"
+  >
+    {{lang}}
   </li>
 </ul>

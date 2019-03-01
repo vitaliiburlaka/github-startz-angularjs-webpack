@@ -1,5 +1,5 @@
 function appRoute($stateProvider) {
-  'ngInject';
+  'ngInject'
   $stateProvider.state('root', {
     url: '',
     abstract: true,
@@ -8,7 +8,7 @@ function appRoute($stateProvider) {
         template: '<app-component></app-component>',
       },
     },
-  });
+  })
 }
 
-export default appRoute;
+export default appRoute

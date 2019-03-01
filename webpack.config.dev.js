@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const webpackDevServerConfig = require('./webpackDevServer.config');
+const webpackDevServerConfig = require('./webpackDevServer.config')
 
 // Always serve from the root in development.
-const publicPath = '/';
-const appSrc = path.resolve(__dirname, './src');
-const appIndexJs = './src/index.js';
-const appIndexHtml = 'public/index.html';
+const publicPath = '/'
+const appSrc = path.resolve(__dirname, './src')
+const appIndexJs = './src/index.js'
+const appIndexHtml = 'public/index.html'
 
 // Style files regexes
-const cssRegex = /\.css$/;
-const sassRegex = /\.(scss|sass)$/;
+const cssRegex = /\.css$/
+const sassRegex = /\.(scss|sass)$/
 
 // Common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -39,12 +39,12 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
         ],
       },
     },
-  ];
+  ]
   if (preProcessor) {
-    loaders.push(require.resolve(preProcessor));
+    loaders.push(require.resolve(preProcessor))
   }
-  return loaders;
-};
+  return loaders
+}
 
 module.exports = {
   mode: 'development',
@@ -58,7 +58,7 @@ module.exports = {
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: function(info) {
-      path.resolve(info.absoluteResourcePath).replace(/\\/g, '/');
+      path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')
     },
   },
   optimization: {
@@ -145,4 +145,4 @@ module.exports = {
     }),
   ],
   devServer: webpackDevServerConfig,
-};
+}

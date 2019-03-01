@@ -1,9 +1,8 @@
 a {
   text-decoration: none;
   color: inherit;
-  transition: all .15s;
+  transition: all 0.15s;
 }
-
 
 .main-header {
   background: $shark-dark;
@@ -13,7 +12,6 @@ a {
   justify-content: center;
   flex-direction: column;
 }
-
 
 .banner {
   color: $alto-grey;
@@ -33,7 +31,6 @@ a {
     display: block;
   }
 }
-
 
 .main-content {
   max-width: 1200px;

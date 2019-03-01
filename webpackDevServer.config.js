@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('path')
 
-const appPublic = path.resolve(__dirname, 'public');
+const appPublic = path.resolve(__dirname, 'public')
 
-const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+const protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
 
 module.exports = {
   compress: true,
@@ -16,4 +16,4 @@ module.exports = {
   historyApiFallback: {
     disableDotRule: true,
   },
-};
+}

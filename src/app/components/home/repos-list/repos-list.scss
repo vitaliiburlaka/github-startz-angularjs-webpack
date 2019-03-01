@@ -1,7 +1,7 @@
 @import '../../../../assets/scss/base/variables';
 
 .repos-list {
-  display: flex ;
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 
@@ -10,7 +10,7 @@
     margin-bottom: 10px;
     padding: 10px;
     text-align: center;
-    transition: all .15s;
+    transition: all 0.15s;
 
     @media screen and (max-width: 1023px) {
       width: calc(25% - 10px);
@@ -21,7 +21,6 @@
     }
   }
 }
-
 
 .repo-item {
   &__number {
@@ -36,7 +35,8 @@
     margin: auto;
     cursor: pointer;
     transform: perspective(160px) translate3d(0, 0, 0);
-    transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1),
+      box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     border-radius: 6px;
     box-shadow: 0 2px 10px rgba(#000, 0.3);
     transform-style: preserve-3d;
@@ -47,7 +47,7 @@
     }
 
     img {
-     display: block;
+      display: block;
     }
   }
 
