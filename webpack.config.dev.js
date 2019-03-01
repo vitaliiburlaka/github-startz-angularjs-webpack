@@ -12,6 +12,8 @@ const appSrc = path.resolve(__dirname, './src')
 const appIndexJs = './src/index.js'
 const appIndexHtml = 'public/index.html'
 
+const moduleFileExtensions = ['web.mjs', 'mjs', 'web.js', 'js', 'json']
+
 // Style files regexes
 const cssRegex = /\.css$/
 const sassRegex = /\.(scss|sass)$/
@@ -68,7 +70,7 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'node_modules'), appSrc],
-    extensions: ['.js', '.json', '.css', '.scss', '.html'],
+    extensions: moduleFileExtensions.map(ext => `.${ext}`),
     alias: {
       // Alias to the assets folder for easy "import"
       assets: path.resolve(__dirname, 'src/assets/'),
@@ -79,10 +81,27 @@ module.exports = {
     rules: [
       // Disable require.ensure as it's not a standard language feature.
       { parser: { requireEnsure: false } },
+      // First, run the linter before Babel processed the JS.
       {
-        test: /src.*\.js$/,
+        test: /\.(js|mjs)$/,
+        enforce: 'pre',
+        use: [
+          {
+            loader: require.resolve('eslint-loader'),
+            options: {
+              ignore: false,
+            },
+          },
+        ],
+        include: appSrc,
+      },
+      {
+        test: /\.(js|mjs)$/,
         include: appSrc,
         loader: require.resolve('babel-loader'),
+        options: {
+          cacheDirectory: true,
+        },
       },
       {
         test: cssRegex,

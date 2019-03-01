@@ -6,9 +6,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const publicPath = '/'
 const appBuild = path.resolve(__dirname, 'dist')
@@ -17,6 +17,8 @@ const appIndexJs = './src/index.js'
 const appIndexHtml = 'public/index.html'
 const shouldUseSourceMap = process.env.NODE_ENV !== 'production'
 const isEnvProduction = process.env.NODE_ENV === 'production'
+
+const moduleFileExtensions = ['web.mjs', 'mjs', 'web.js', 'js', 'json']
 
 // Style files regexes
 const cssRegex = /\.css$/
@@ -79,12 +81,7 @@ module.exports = env => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            parse: {
-              ecma: 8,
-            },
             compress: {
-              ecma: 5,
-              warnings: false,
               comparisons: false,
               inline: 2,
             },
@@ -92,8 +89,6 @@ module.exports = env => {
               safari10: true,
             },
             output: {
-              ecma: 5,
-              comments: false,
               // Turned on because emoji and regex is not minified properly using default
               ascii_only: true,
             },
@@ -119,13 +114,14 @@ module.exports = env => {
           },
         }),
       ],
+      runtimeChunk: true,
       splitChunks: {
         chunks: 'all',
       },
     },
     resolve: {
       modules: [path.resolve(__dirname, 'node_modules'), appSrc],
-      extensions: ['.js', '.css', '.json', '.scss', '.html'],
+      extensions: moduleFileExtensions.map(ext => `.${ext}`),
       alias: {
         // Alias to the assets folder for easy "import"
         assets: path.resolve(__dirname, 'src/assets/'),
@@ -136,10 +132,27 @@ module.exports = env => {
       rules: [
         // Disable require.ensure as it's not a standard language feature.
         { parser: { requireEnsure: false } },
+        // First, run the linter before Babel processed the JS.
         {
-          test: /src.*\.js$/,
+          test: /\.(js|mjs|jsx)$/,
+          enforce: 'pre',
+          use: [
+            {
+              loader: require.resolve('eslint-loader'),
+              options: {
+                ignore: false,
+              },
+            },
+          ],
+          include: appSrc,
+        },
+        {
+          test: /\.(js|mjs|jsx)$/,
           include: appSrc,
           loader: require.resolve('babel-loader'),
+          options: {
+            compact: true,
+          },
         },
         {
           test: cssRegex,
@@ -201,6 +214,7 @@ module.exports = env => {
       ],
     },
     plugins: [
+      new CleanWebpackPlugin(['dist/*']),
       new HtmlWebpackPlugin({
         inject: true,
         template: appIndexHtml,
