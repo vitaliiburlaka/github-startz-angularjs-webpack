@@ -3,7 +3,8 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: false,
+        useBuiltIns: 'usage',
+        corejs: 3,
       },
     ],
   ],
@@ -12,13 +13,4 @@ module.exports = {
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-proposal-object-rest-spread',
   ],
-  env: {
-    production: {
-      plugins: [
-        ['angularjs-annotate', { explicitOnly: true }],
-        '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-proposal-object-rest-spread',
-      ],
-    },
-  },
 }

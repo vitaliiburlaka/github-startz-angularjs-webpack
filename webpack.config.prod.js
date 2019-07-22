@@ -69,7 +69,7 @@ module.exports = env => {
     // Stop compilation early in production
     bail: isEnvProduction,
     devtool: shouldUseSourceMap ? 'source-map' : false,
-    entry: ['@babel/polyfill', appIndexJs],
+    entry: appIndexJs,
     output: {
       path: appBuild,
       filename: 'static/js/[name].[chunkhash:8].js',
@@ -147,7 +147,7 @@ module.exports = env => {
           include: appSrc,
         },
         {
-          test: /\.(js|mjs|jsx)$/,
+          test: /\.(js|mjs)$/,
           include: appSrc,
           loader: require.resolve('babel-loader'),
           options: {
