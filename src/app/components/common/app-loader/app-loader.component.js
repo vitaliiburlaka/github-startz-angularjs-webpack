@@ -1,9 +1,9 @@
-import template from './app-loader.html'
+import templateUrl from './app-loader.html'
 import './app-loader.scss'
 
 const appLoader = {
   bindings: {},
-  templateUrl: template,
+  templateUrl,
   controller: function($scope, $http, $element, $timeout) {
     'ngInject'
 
@@ -14,9 +14,7 @@ const appLoader = {
 
     let _count = 0
     let intervalCounterId = 0
-    const _hasPendingRequests = function() {
-      return $http.pendingRequests.length > 0
-    }
+    const _hasPendingRequests = () => $http.pendingRequests.length > 0
 
     $scope.$watch(_hasPendingRequests, (newVal, oldVal) => {
       if (newVal !== oldVal) {
@@ -33,6 +31,7 @@ const appLoader = {
     function startProgress() {
       ctrl.isActive = true
       intervalCounterId = setInterval(frame, 10)
+
       function frame() {
         if (_count >= 100) {
           clearInterval(intervalCounterId)

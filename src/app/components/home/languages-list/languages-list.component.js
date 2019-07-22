@@ -1,4 +1,4 @@
-import template from './languages-list.html'
+import templateUrl from './languages-list.html'
 import './languages-list.scss'
 
 const languagesList = {
@@ -7,7 +7,7 @@ const languagesList = {
     selectedLanguage: '<',
     onSelect: '&',
   },
-  templateUrl: template,
+  templateUrl,
 }
 
 export default languagesList

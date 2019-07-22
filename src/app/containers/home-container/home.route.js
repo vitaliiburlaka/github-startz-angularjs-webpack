@@ -13,9 +13,7 @@ function homeRoute($stateProvider) {
       _popularReposData: GitHubApiService => {
         'ngInject'
 
-        return GitHubApiService.fetchPopularRepos('all').then(data => {
-          return data
-        })
+        return GitHubApiService.fetchPopularRepos('all').then(data => data)
       },
     },
   })

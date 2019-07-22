@@ -1,10 +1,10 @@
-import template from './home-container.html'
+import templateUrl from './home-container.html'
 
 const homeContainer = {
   bindings: {
     popularReposData: '<',
   },
-  templateUrl: template,
+  templateUrl,
   controller: function(GitHubApiService) {
     'ngInject'
 

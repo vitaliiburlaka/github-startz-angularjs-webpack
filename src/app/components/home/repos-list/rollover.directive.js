@@ -8,14 +8,14 @@ function rolloverDirective() {
       el.addEventListener('mousemove', handleMouseMove, { passive: true })
       el.addEventListener('mouseout', handleMouseOut, { passive: true })
 
-      function handleMouseMove(event) {
+      function handleMouseMove({ pageX, pageY }) {
         const tiltLimit = 5
         const halfW = this.clientWidth / 2
         const halfH = this.clientHeight / 2
 
         // Calculate coordinates
-        const xCoor = halfW - (event.pageX - this.offsetLeft)
-        const yCoor = halfH - (event.pageY - this.offsetTop)
+        const xCoor = halfW - (pageX - this.offsetLeft)
+        const yCoor = halfH - (pageY - this.offsetTop)
 
         // Calculate max rotation degree
         const xDeg = (yCoor / halfH) * tiltLimit

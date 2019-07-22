@@ -1,11 +1,11 @@
-import template from './repos-list.html'
+import templateUrl from './repos-list.html'
 import './repos-list.scss'
 
 const reposList = {
   bindings: {
     repos: '<',
   },
-  templateUrl: template,
+  templateUrl,
 }
 
 export default reposList
