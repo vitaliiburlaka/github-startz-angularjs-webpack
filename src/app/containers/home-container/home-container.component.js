@@ -1,5 +1,4 @@
 import template from './home-container.html'
-import './home-container.scss'
 
 const homeContainer = {
   bindings: {

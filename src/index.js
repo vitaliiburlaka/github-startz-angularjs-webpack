@@ -1,4 +1,3 @@
 import './polyfill'
 import './app/app.module'
-import 'normalize.css'
-import './assets/scss/main.scss'
+import './styles/index.scss'

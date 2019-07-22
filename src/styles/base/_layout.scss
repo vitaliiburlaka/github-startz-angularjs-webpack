@@ -6,7 +6,7 @@ a {
 
 .main-header {
   background: $shark-dark;
-  padding: $content-padding-base;
+  padding: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,5 +35,5 @@ a {
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: $content-padding-base;
+  padding: 30px;
 }

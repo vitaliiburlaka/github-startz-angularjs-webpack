@@ -23,7 +23,6 @@
     "angular": "^1.7.8",
     "angular-animate": "^1.7.8",
     "core-js": "^3.1.4",
-    "normalize.css": "^8.0.1",
     "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
